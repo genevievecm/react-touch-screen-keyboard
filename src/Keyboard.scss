@@ -25,7 +25,6 @@
   flex-basis: 100px;
   font-size: 18px;
   height: 60px;
-  border-radius: 4px;
   background-color: #F5F5F5;
   border: 1px solid #CECECE;
   font-family: 'Roboto', sans-serif;
@@ -78,8 +77,8 @@
 
   &.keyboard-submitButton, &.keyboard-submit-button {
     flex-basis: 95px;
-    background-color: #63b324;
-    border-color: #63b324;
+    background-color: #0075B2;
+    border-color: #0075B2;
     color: #ffffff;
   }
 }
