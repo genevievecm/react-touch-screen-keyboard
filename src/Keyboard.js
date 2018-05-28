@@ -87,20 +87,6 @@ export default class Keyboard extends PureComponent {
       ? this.props.secondaryKeyboard : this.props.defaultKeyboard });
   }
 
-  // clearInput() {
-  //   const { inputNode } = this.props;
-
-  //   inputNode.value = '';
-  //   if (this.props.onClick) {
-  //     this.props.onClick('');
-  //   }
-
-  //   setTimeout(() => {
-  //     inputNode.focus();
-  //   }, 0);
-  //   inputNode.dispatchEvent(new CustomEvent('input'));
-  // }
-
   handleShiftClick() {
     this.setState({ uppercase: !this.state.uppercase });
   }
@@ -111,41 +97,9 @@ export default class Keyboard extends PureComponent {
 
   handleLetterButtonClick(key) {
     const { inputNode } = this.props;
-    // const { value } = inputNode;
-    let selectionStart;
-    let selectionEnd;
-
-    // console.log(key)
-
-    try {
-      selectionStart = inputNode.selectionStart;
-      selectionEnd = inputNode.selectionEnd;
-    } catch (e) {
-      selectionStart = value.length;
-      selectionEnd = value.length;
-    }
-    // const nextValue = value.substring(0, selectionStart) + key + value.substring(selectionEnd);
-
-    // inputNode.value = nextValue;
-    // setTimeout(() => {
-    //   inputNode.focus();
-    //   try {
-    //     const offset = !isFinite(key) ? key.length : 1;
-    //     inputNode.setSelectionRange(selectionStart + offset, selectionStart + offset);
-    //   } catch (e) {
-    //     console.error(e);
-    //   }
-    // });
     this.setState({ uppercase: this.isUppercase() });
     inputNode.dispatchEvent(new CustomEvent('keyboard-btn', { detail: key }));
   }
-
-  // handleDragKeyClick() {
-  //   const { inputNode } = this.props;
-  //   setTimeout(() => {
-  //     inputNode.focus();
-  //   }, 0);
-  // }
 
   isUppercase() {
     const { inputNode, isFirstLetterUppercase, uppercaseAfterSpace, dataset } = this.props;
@@ -157,40 +111,6 @@ export default class Keyboard extends PureComponent {
 
   handleBackspaceClick() {
     const { inputNode } = this.props;
-    // const { value } = inputNode;
-    // let selectionStart;
-    // let selectionEnd;
-    // try {
-    //   selectionStart = inputNode.selectionStart;
-    //   selectionEnd = inputNode.selectionEnd;
-    // } catch (e) {
-    //   selectionStart = 0;
-    //   selectionEnd = value.length;
-    // }
-
-    // let nextValue;
-    // let nextSelectionPosition;
-    // if (selectionStart === selectionEnd) {
-    //   nextValue = value.substring(0, selectionStart - 1) + value.substring(selectionEnd);
-    //   nextSelectionPosition = selectionStart - 1;
-    // } else {
-    //   nextValue = value.substring(0, selectionStart) + value.substring(selectionEnd);
-    //   nextSelectionPosition = selectionStart;
-    // }
-    // nextSelectionPosition = (nextSelectionPosition > 0) ? nextSelectionPosition : 0;
-
-    // inputNode.value = nextValue;
-    // if (this.props.onClick) {
-    //   this.props.onClick(nextValue);
-    // }
-    // setTimeout(() => {
-    //   inputNode.focus();
-    //   try {
-    //     inputNode.setSelectionRange(nextSelectionPosition, nextSelectionPosition);
-    //   } catch (e) {
-    //     console.error(e);
-    //   }
-    // }, 0);
     this.setState({ uppercase: this.isUppercase() });
     inputNode.dispatchEvent(new CustomEvent('keyboard-delete'));
   }

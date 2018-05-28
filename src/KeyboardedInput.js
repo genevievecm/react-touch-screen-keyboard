@@ -35,7 +35,7 @@ class KeyboardedInput extends React.Component {
     this.state = {
       showKeyboard: false,
       input: null,
-      value: '',
+      value: [],
       cursorPos: 0,
     };
   }
@@ -43,7 +43,6 @@ class KeyboardedInput extends React.Component {
   componentDidMount() {
     this.input.addEventListener('keyboard-btn', this.handleChange);
     this.input.addEventListener('keyboard-delete', this.handleDelete);
-    // console.log(this.input.selectionStart)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -55,57 +54,49 @@ class KeyboardedInput extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    this.input.addEventListener('keyboard-btn', this.handleChange);
-  }
-
   handleChange(e) {
-    // if (e.type === 'keyboard-btn') {
-    const { value } = this.state;
-    const nextValue = value.slice(0, e.target.selectionStart) + e.detail + value.slice(e.target.selectionStart);
-    this.setState({
-      input: e.target,
-      value: nextValue,
-      cursorPos: e.target.selectionStart + 1,
-    });
-      // console.log(value.slice(0, e.target.selectionStart), e.detail, value.slice(e.target.selectionStart));
-      setTimeout(() => {
-        console.log('change', this.state, e.target.selectionStart);
-      }, 0);
-    // }
+    const { cursorPos } = this.state;
+    const pos = cursorPos + 1;
+    if (e.type === 'keyboard-btn') {
+      this.input.focus();
+      this.setState((prevState) => {
+        const nextValue = prevState.value;
+        nextValue.splice(cursorPos, 0, e.detail);
+        return ({
+          input: e.target,
+          value: nextValue,
+          cursorPos: e.target.selectionStart >= 0 ? pos : e.target.selectionStart,
+        });
+      });
+    }
   }
 
   handleClick(e) {
-    e.persist();
     this.setState({
-      cursorPos: this.state.value.length ? e.target.selectionStart : 0,
+      cursorPos: e.target.selectionStart,
     });
-    setTimeout(() => {
-      console.log('click', this.state, e.target.selectionStart);
-    }, 0);
   }
 
-  handleDelete(e) {
-    console.log(this.state.cursorPos)
-    const { value, cursorPos } = this.state;
-    const nextValue = value.replace(value.substring(cursorPos - 1, cursorPos), '');
-    const nextPosition = value.indexOf(cursorPos);
-    this.setState({
-      value: nextValue,
-      cursorPos: e.target.selectionStart > 0 ? cursorPos - 1 : 0,
+  handleDelete() {
+    const { cursorPos } = this.state;
+    const pos = cursorPos - 1;
+    this.setState((prevState) => {
+      const nextValue = prevState.value;
+      nextValue.splice(pos, 1);
+      return ({
+        value: nextValue,
+        cursorPos: cursorPos > 0 ? pos : 0,
+      });
     });
-    setTimeout(() => {
-      console.log('delete', this.state, e.target.selectionStart);
-    }, 0);
   }
 
   handleFocus() {
     // Prevent blinking of the keyboard if opaque
     setTimeout(() => {
-      if (typeof (this.state.value) !== 'undefined') {
-        if (this.state.input) this.state.input.scrollLeft = this.state.input.scrollWidth;
-        this.setState({ showKeyboard: true });
+      if (this.state.input) {
+        this.input.scrollLeft = this.input.scrollWidth;
       }
+      this.setState({ showKeyboard: true });
     }, 0);
   }
 
@@ -129,7 +120,7 @@ class KeyboardedInput extends React.Component {
           name={this.props.name}
           className={this.props.inputClassName}
           placeholder={this.props.placeholder}
-          value={this.state.value}
+          value={this.state.value.join('')}
           type={this.props.type}
           onFocus={this.handleFocus}
           onBlur={this.handleFocusLost}
